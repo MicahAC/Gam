@@ -1,6 +1,6 @@
 const {colors, wait} = require("../utils")
 const {prompt, openMenu, Menu} = require("../inputManager")
-const Player = require("../player")
+const {Player} = require("../player")
 
 async function startSequence() {
     let player;

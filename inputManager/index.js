@@ -1,4 +1,3 @@
-const { Menu, Option } = require("./menu")
 const { colors, arrows, enter } = require("../utils")
 const readline = require("readline");
 rl = readline.createInterface({
@@ -12,8 +11,9 @@ process.stdin.resume();
 
 
 let currentMenu = null;
+let currentMenuPromise = null;
 
-process.stdin.on('data', (key) => {
+process.stdin.on('data', async (key) => {
     if (key === '\u0003') process.exit();
     if (!currentMenu) return
     if (key === arrows.up) currentMenu.selected = (currentMenu.selected - 1 + currentMenu.options.length) % currentMenu.options.length;
@@ -22,7 +22,9 @@ process.stdin.on('data', (key) => {
         const selectedOption = currentMenu.options[currentMenu.selected];
         currentMenu = null;
         console.clear();
-        selectedOption.run();
+        await selectedOption.run();
+        if (currentMenuPromise) currentMenuPromise();
+        currentMenuPromise = null;
         return
     }
     renderMenu();
@@ -37,6 +39,14 @@ function openMenu(menu) {
     currentMenu = menu;
     currentMenu.selected = 0;
     renderMenu();
+    if(currentMenuPromise) return new Promise(resolve => {
+        const oldResolve = currentMenuPromise;
+        currentMenuPromise = () => {
+            oldResolve();
+            resolve();
+        }
+    })
+    else return new Promise(resolve => currentMenuPromise = resolve);
 }
 
 function renderMenu() {
@@ -59,6 +69,34 @@ async function prompt(question) {
             resolve(answer);
         });
     });
+}
+
+class Menu {
+    /**
+     * @param {string} title
+     * @param {Array.<Option>} options 
+     */
+    constructor(title, options) {
+        this.title = title;
+        this.options = options;
+        this.selected = 0;
+    }
+
+    open() {
+        return openMenu(this);
+    }
+}
+
+class Option {
+    /**
+     * 
+     * @param {string} name 
+     * @param {function} run 
+     */
+    constructor(name, run) {
+        this.name = name;
+        this.run = run;
+    }
 }
 
 module.exports = { Menu, Option, openMenu, prompt }
