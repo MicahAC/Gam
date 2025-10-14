@@ -1,3 +1,4 @@
+const { defaultMoves } = require("../globals");
 const Entity = require("./index");
 
 class Player extends Entity {
@@ -12,6 +13,8 @@ class Player extends Entity {
             legs: null,
             feet: null
         };
+
+        this.moves = defaultMoves;
     }
 
     getBonus(stat) {

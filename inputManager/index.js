@@ -22,9 +22,15 @@ process.stdin.on('data', async (key) => {
         const selectedOption = currentMenu.options[currentMenu.selected];
         currentMenu = null;
         console.clear();
+
+        const resolver = currentMenuPromise;
+
         await selectedOption.run();
-        if (currentMenuPromise) currentMenuPromise();
-        currentMenuPromise = null;
+
+        if (resolver) {
+            resolver(); 
+            if (currentMenuPromise === resolver) currentMenuPromise = null;
+        }
         return;
     }
     renderMenu();
@@ -42,7 +48,7 @@ function openMenu(menu) {
     if(currentMenuPromise) return new Promise(resolve => {
         const oldResolve = currentMenuPromise;
         currentMenuPromise = () => {
-            oldResolve();
+            currentMenuPromise = oldResolve
             resolve();
         }
     })

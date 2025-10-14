@@ -10,5 +10,7 @@ const startSequence = require("./menus/startSequence");
     // Set the shared player instance on the exported module object
     playerState.player = await startSequence();
 
-    while(1) await mainMenu.open();
+    while(1) {
+        await mainMenu.open();
+    }
 })();

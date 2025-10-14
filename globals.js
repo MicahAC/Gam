@@ -13,19 +13,24 @@ const defaultMoves = [
     new Move("Punch", "Deals 0.8x user's strength in damage", (user, target)=>{
         const strength = user.getStat("strength");
         const damage = Math.floor(strength * 0.8);
-        target.stats.health -= damage;
+        target.health -= damage;
+        const targetName = colors.yellow + target.name + colors.brightBlue;
+        const userName = colors.yellow + user.name + colors.brightBlue;
 
-        console.log(`${colors.brightBlue} ${user.name} punches ${target.name} dealing ${colors.red}${damage}${colors.brightBlue} damage!${colors.reset}`);
-    }),
+        console.log(`${userName} punches ${targetName} dealing ${colors.red}${damage}${colors.brightBlue} damage!${colors.reset}`);
+    }, false),
     new Move("Tackle", "Deals 1.5x user's strength in damage. 0.5x user's strength in recoil.", (user, target)=>{
         const strength = user.getStat("strength");
         const damage = Math.floor(strength * 1.5);
         const recoil = Math.floor(strength * 0.5);
-        target.stats.health -= damage;
-        user.stats.health -= recoil;
+        target.health -= damage;
+        user.health -= recoil;
 
-        console.log(`${colors.brightBlue} ${user.name} tackles ${target.name} dealing ${colors.red}${damage}${colors.brightBlue} damage\nHowever, they take ${colors.red}${recoil}${colors.brightBlue} recoil damage!${colors.reset}`);
-    })
+        const targetName = colors.yellow + target.name + colors.brightBlue;
+        const userName = colors.yellow + user.name + colors.brightBlue;
+
+        console.log(`${userName} tackles ${targetName} dealing ${colors.red}${damage}${colors.brightBlue} damage!\n${colors.brightBlue}However, they take ${colors.red}${recoil}${colors.brightBlue} recoil damage!${colors.reset}`);
+    }, false)
 ]
 
 module.exports = { statTypes, defaultMoves };
