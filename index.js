@@ -3,7 +3,7 @@ const {openMenu} = require("./inputManager");
 const {colors, wait} = require("./utils");
 const mainMenu = require("./menus/mainMenu");
 // Import the module object instead of destructuring so we can update shared state
-const playerState = require("./player");
+const playerState = require("./entity/player");
 const startSequence = require("./menus/startSequence");
 
 (async () => {

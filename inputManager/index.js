@@ -15,7 +15,7 @@ let currentMenuPromise = null;
 
 process.stdin.on('data', async (key) => {
     if (key === '\u0003') process.exit();
-    if (!currentMenu) return
+    if (!currentMenu) return;
     if (key === arrows.up) currentMenu.selected = (currentMenu.selected - 1 + currentMenu.options.length) % currentMenu.options.length;
     if (key === arrows.down) currentMenu.selected = (currentMenu.selected + 1) % currentMenu.options.length;
     if (key === enter) {
@@ -25,7 +25,7 @@ process.stdin.on('data', async (key) => {
         await selectedOption.run();
         if (currentMenuPromise) currentMenuPromise();
         currentMenuPromise = null;
-        return
+        return;
     }
     renderMenu();
 });

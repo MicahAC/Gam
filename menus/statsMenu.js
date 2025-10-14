@@ -1,5 +1,5 @@
 const { Menu, Option } = require("../inputManager");
-const playerState = require("../player");
+const playerState = require("../entity/player");
 
 module.exports = async function showStats() {
     const p = playerState.player;
@@ -7,9 +7,10 @@ module.exports = async function showStats() {
         console.log("No player initialized yet.");
         return;
     }
-    const stats = Object.entries(p.stats).map(([key, value]) => {
+    const stats = `Level: ${p.level}\n` + Object.entries(p.stats).map(([key, value]) => {
         const bonus = p.getBonus(key);
-        return `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value} ${bonus ? `( +${bonus} )` : ''}`;
+        const statType = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
+        return `${statType}: ${value} ${bonus ? `( +${bonus} )` : ''}`;
     }).join('\n');
 
     const statsMenu = new Menu(`-=Stats=-\n${stats}`, [

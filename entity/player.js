@@ -1,13 +1,9 @@
-class Player {
+const Entity = require("./index");
+
+class Player extends Entity {
     constructor(name) {
-        this.name = name;
-        this.stats = {
-            level: 1,
-            health: 20,
-            mana: 10,
-            strength: 5,
-            speed: 5
-        }
+        super(name, 1)
+        
         this.inventory = [];
         this.equipment = {
             weapon: null,
@@ -28,17 +24,8 @@ class Player {
         return bonus;
     }
 
-    get health() {
-        return this.stats.health + this.getBonus('health');
-    }
-    get mana() {
-        return this.stats.mana + this.getBonus('mana');
-    }
-    get strength() {
-        return this.stats.strength + this.getBonus('strength');
-    }
-    get speed() {
-        return this.stats.speed + this.getBonus('speed');
+    getStat(stat) {
+        return this.stats[stat] + this.getBonus(stat);
     }
 }
 

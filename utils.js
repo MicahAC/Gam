@@ -32,4 +32,15 @@ const colors = {
  */
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-module.exports = {colors, arrows, enter, wait}
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive).
+ *
+ * @param {number} min - The minimum value (inclusive).
+ * @param {number} max - The maximum value (inclusive).
+ * @returns {number} A random integer between min and max.
+ */
+const random = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+module.exports = {colors, arrows, enter, wait, random}

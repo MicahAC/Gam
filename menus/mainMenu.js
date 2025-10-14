@@ -1,10 +1,14 @@
 const {colors, wait} = require("../utils")
 const {Menu, Option, openMenu} = require("../inputManager")
-const showStats = require("./stats");
+const showStats = require("./statsMenu");
 // Import the module object to access the latest player instance
-const playerState = require("../player");
+const playerState = require("../entity/player");
+const huntMenu = require("./huntMenu");
 
 const mainMenu = new Menu("Choose Your Action", [
+    new Option("Hunt", async () => {
+        await huntMenu();
+    }),
     new Option("Stats", async () => {
         await showStats();
     }),
@@ -18,5 +22,8 @@ const mainMenu = new Menu("Choose Your Action", [
         process.exit(0);
     })
 ])
+
+//mercenaries
+//Making jumping fair again
 
 module.exports = mainMenu;
