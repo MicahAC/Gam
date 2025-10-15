@@ -24,7 +24,8 @@ class Move {
         this.description = description;
         this.use = use;
         this.selfMove = selfMove;
-        this.requirements = requirements;
+        if(!requirements) this.requirements = () => true;
+        else this.requirements = requirements;
     }
 }
 
