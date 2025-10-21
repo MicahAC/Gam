@@ -1,14 +1,26 @@
 const {colors, wait} = require("../utils")
-const {prompt, openMenu, Menu} = require("../inputManager")
+const {prompt, openMenu, Menu, Option} = require("../inputManager")
 const {Player} = require("../entity/player")
+const {classes} = require('../classes')
 
 async function startSequence() {
     let player;
     console.clear()
     //Have I met you before? (Save loading)
     console.log(colors.yellow + "Welcome to the 4th Era of Gam" + colors.reset)
-    const name = await prompt(colors.brightBlue + "Tell me your name: " + colors.green)
+    let name = await prompt(colors.brightBlue + "Tell me your name: " + colors.green)
+    if(!name) name = "Lattice"
+
     player = new Player(name)
+
+    const classSelection = new Menu("Choose your class:", classes.map(c=>{
+        return new Option(c.name + ": " + c.description, async ()=>{
+            player.class = c;
+            player.moves = [...player.moves, ...c.moves]
+        })
+    }))
+
+    await classSelection.open()
 
     if(name == "Lattice") return player //Dev Bypass
 

@@ -35,13 +35,29 @@ async function battleLoop(player, enemies) {
         return 1;
     }
 
+    for (const enemy of enemies) await enemyMove(enemy, player);
+    await wait(500);
+    
+    const newlyDefeated = enemies.filter(e => e.health <= 0);
+    for (const defeated of newlyDefeated) {
+        await wait(500);
+        console.log(`${colors.red}${defeated.name} has been defeated!${colors.reset}`);
+        enemies.splice(enemies.indexOf(defeated), 1);
+    }
+
+    if (enemies.length === 0) {
+        await wait(500);
+        console.log(`${colors.brightRed}Victory! You have defeated all enemies!${colors.reset}`);
+        await wait(500);
+        return 1;
+    }
+
     if(player.health <= 0) {
-        console.log(`${colors.red}You have been defeated${colors.reset}`);
+        console.log(`${colors.red}You have been defeated...${colors.reset}`);
+        await wait(500);
         return -1;
     }
 
-    for (const enemy of enemies) await enemyMove(enemy, player);
-    await wait(500);
     return 0;
 }
 
