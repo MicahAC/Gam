@@ -12,7 +12,7 @@ async function chooseSelfMove(player, playerText) {
         if (move.requirements && !move.requirements(player)) return;
         if (!move.selfMove) return;
         return new Option(`${move.name} - ${move.description}`, async () => move.use(player, player))
-    }));
+    }).filter(x=>x));
     await selfMoveMenu.open();
 }
 

@@ -1,9 +1,10 @@
 const {colors, wait} = require("../utils")
 const {Menu, Option, openMenu} = require("../inputManager")
 const showStats = require("./statsMenu");
-// Import the module object to access the latest player instance
-const playerState = require("../entity/player");
 const huntMenu = require("./huntMenu");
+const lzString = require("lz-string");
+const playerState = require("../entity/player");
+
 
 const mainMenu = new Menu("Choose Your Action", [
     new Option("Hunt", async () => {
@@ -12,9 +13,12 @@ const mainMenu = new Menu("Choose Your Action", [
     new Option("Stats", async () => {
         await showStats();
     }),
-    new Option("Save (Not Implemented)", async () => {
-        console.log(colors.red + "Save feature not implemented yet!" + colors.reset);
-        await wait(1000);
+    new Option("Save", async () => {
+        const compressedData = lzString.compressToBase64(JSON.stringify(playerState.player));
+        console.log(colors.green + "Game Saved!" + colors.reset);
+        console.log(colors.brightBlue + "Save Data:" + colors.yellow);
+        console.log(compressedData);
+        await wait(6000);
     }),
     new Option("Exit", async () => {
         console.log(colors.yellow + "Exiting game..." + colors.reset);

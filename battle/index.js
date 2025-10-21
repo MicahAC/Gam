@@ -24,6 +24,7 @@ module.exports = async function battle(enemies) {
     }
     if (battleOver === 1) {
         await player.addExp(expAward);
+        playerState.player.modifiers = [];
     } else if (battleOver === -1) {
         process.exit(0);
     }

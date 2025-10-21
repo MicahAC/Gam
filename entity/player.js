@@ -7,7 +7,7 @@ class Player extends Entity {
         super(name, 1)
         
         this.exp = 0;
-        this.statPoints = 2;
+        this.statPoints = 4;
         this.inventory = [];
         this.equipment = {
             weapon: null,

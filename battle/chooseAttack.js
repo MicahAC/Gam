@@ -13,7 +13,7 @@ async function chooseAttack(player, chosenEnemy, playerText) {
         if (move.requirements && !move.requirements(player)) return;
         if (move.selfMove) return;
         return new Option(`${move.name} - ${move.description}`, async () => move.use(player, chosenEnemy))
-    }));
+    }).filter(x=>x));
     await moveMenu.open();
 }
 
