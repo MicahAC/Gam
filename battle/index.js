@@ -7,7 +7,7 @@ const battleLoop = require('./battleLoop');
  * @param {Array.<Enemy>} enemies 
  */
 module.exports = async function battle(enemies) {
-    const expAward = enemies.reduce((sum, enemy) => sum + enemy.level, 0);
+    const expAward = enemies.reduce((sum, enemy) => sum + 1 + enemy.level, 0);
     console.clear();
     for (const enemy of enemies) {
         enemy.health = enemy.getStat('health');
