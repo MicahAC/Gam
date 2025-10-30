@@ -14,7 +14,9 @@ const mainMenu = new Menu("Choose Your Action", [
         await showStats();
     }),
     new Option("Save", async () => {
-        const compressedData = lzString.compressToBase64(JSON.stringify(playerState.player));
+        const saveStructure = Object.fromEntries(Object.entries(playerState.player))
+        saveStructure.moves.map(move=>move.identifier);
+        const compressedData = lzString.compressToBase64(JSON.stringify(saveStructure));
         console.log(colors.green + "Game Saved!" + colors.reset);
         console.log(colors.brightBlue + "Save Data:" + colors.yellow);
         console.log(compressedData);

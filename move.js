@@ -21,6 +21,7 @@ class Move {
      */
     constructor(name, description, use, selfMove, requirements = null) {
         this.name = name;
+        this.identifier = name.replace(/(?:^\w|\s\w)/g, (m) => m.trim().toUpperCase()).replace(/\s+/g, '')
         this.description = description;
         this.use = use;
         this.selfMove = selfMove;

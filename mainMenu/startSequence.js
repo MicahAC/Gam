@@ -3,6 +3,7 @@ const { prompt, openMenu, Menu, Option } = require("../inputManager")
 const { Player } = require("../entity/player")
 const { classes } = require('../classes')
 const lzString = require("lz-string");
+const moves = require("../moves");
 
 async function startSequence() {
     let player;
@@ -15,6 +16,8 @@ async function startSequence() {
                 const decompressedData = lzString.decompressFromBase64(saveData);
                 const parsedData = JSON.parse(decompressedData);
                 player = Object.assign(new Player(), parsedData);
+                player.moves = player.moves.map(move=>moves[move.identifier]);
+            
                 console.log(colors.green + "Save loaded successfully!" + colors.reset);
                 await wait(1000);
             } catch (error) {

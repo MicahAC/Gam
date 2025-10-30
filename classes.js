@@ -1,6 +1,5 @@
-const Modifier = require("./entity/modifier");
 const {Move} = require('./move');
-const { colors } = require("./utils");
+const moves = require('./moves');
 
 class Class {
     /**
@@ -21,158 +20,31 @@ class Class {
  */
 const classes = [
     new Class("Militaman", "A brave but untrained soldier who uses basic weapons and knows how to patch a wound", [
-        new Move("Basic Swing", "Deals the user's strength in damage", (user, target) => {
-            const strength = user.getStat("strength");
-            const damage = strength
-            target.health -= damage;
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} swings at ${targetName} dealing ${colors.red}${damage}${colors.brightBlue} damage!${colors.reset}`);
-        }),
-        new Move("Quick Aid", "Heals the user's speed in health", (user, target) => {
-            const speed = user.getStat("speed");
-            const heal = speed;
-            user.health += heal;
-            user.health = Math.min(user.health, user.getStat("health"));
-
-            const userName = colors.yellow + user.name + colors.brightBlue;
-            console.log(`${userName} quickly patches themselves up, restoring ${colors.green}${heal}${colors.brightBlue} health!${colors.reset}`);
-        }, true)
+        moves.BasicSwing,
+        moves.QuickAid
     ]),
     new Class("Enchanter", "A magic user who specializes in self enhancements and targetted curses", [
-        new Move("Weaken", "Reduces the target's strength by half the user's speed for the duration of the battle. Uses 3 mana", (user, target) => {
-            const modifier = new Modifier("strength", - Math.floor(user.getStat("speed") / 2));
-            target.modifiers.push(modifier);
-            user.mana -= 3;
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} casts Weaken on ${targetName}, reducing their strength by ${colors.red}${-modifier.value}${colors.brightBlue}!${colors.reset}`);
-        }, false, (user) => user.mana >= 3),
-        new Move("Empower", "Increases the user's strength by 2 for the duration of the battle. Uses 3 mana", (user, target) => {
-            const modifier = new Modifier("strength", 2);
-            user.modifiers.push(modifier);
-            user.mana -= 3;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} casts Empower, increasing their strength by ${colors.green}2${colors.brightBlue}!${colors.reset}`);
-        }, true, (user) => user.mana >= 3)
+        moves.Weaken,
+        moves.Empower
     ]),
     new Class("Berserker", "A fierce warrior who attacks with great power but runs out of stamina quickly", [
-        new Move("Raging Strike", "Deals double the user's strength in damage but lowers their strength by 2 for the rest of the battle", (user, target) => {
-            const strength = user.getStat("strength");
-            const damage = strength * 2;
-            target.health -= damage;
-            const modifier = new Modifier("strength", -2);
-            user.modifiers.push(modifier);
-
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} unleashes a Raging Strike on ${targetName}, dealing ${colors.red}${damage}${colors.brightBlue} damage but losing ${colors.red}2${colors.brightBlue} strength!${colors.reset}`);
-        }),
-        new Move("Full Force", "Deals the user's remaining health in damage minus 1 but leaves them with 1 health", (user, target) => {
-            const damage = user.health - 1;
-            target.health -= damage;
-            user.health = 1;
-            
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} attacks with Full Force on ${targetName}, dealing ${colors.red}${damage}${colors.brightBlue} damage but leaving themselves with ${colors.red}1${colors.brightBlue} health!${colors.reset}`);
-        })
+        moves.RagingStrike,
+        moves.FullForce
     ]),
     new Class("Rogue", "A fighter who leverages speed and agility to outmaneuver opponents", [
-        new Move("Multi Strike", "For every 4 speed the user has (rounded up), they strike the target once dealing 0.5x their strength in damage per hit", (user, target) => {
-            const speed = user.getStat("speed");
-            const hits = Math.ceil(speed / 4);
-            const strength = user.getStat("strength");
-            const damagePerHit = Math.floor(strength * 0.5);
-            const damage = damagePerHit * hits;
-            target.health -= damage;
-
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} performs Multi Strike on ${targetName}, hitting ${hits} times and dealing a total of ${colors.red}${damage}${colors.brightBlue} damage!${colors.reset}`);
-        }),
-        new Move("Evasion", "Increases the user's speed by 3 for the duration of the battle", (user, target) => {
-            const modifier = new Modifier("speed", 3);
-            user.modifiers.push(modifier);
-
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} uses Evasion, increasing their speed by ${colors.green}3${colors.brightBlue}!${colors.reset}`);
-        }, true)
+        moves.MultiStrike,
+        moves.Evasion
     ]),
     new Class("Mage", "A spellcaster who uses mana to cast powerful spells", [
-        new Move("Fireball", "Deals 2x the user's magic power in damage. Uses 5 mana", (user, target) => {
-            const magicPower = user.getStat("magicPower");
-            const damage = magicPower * 2;
-            target.health -= damage;
-            user.mana -= 5;
-
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} casts Fireball on ${targetName}, dealing ${colors.red}${damage}${colors.brightBlue} damage!${colors.reset}`);
-        }, false, (user) => user.mana >= 5),
-        new Move("Voltage", "Deals 1.5x the user's magic power in damage and lowers the targets magic power by 1 for the duration of the battle. Uses 4 mana", (user, target) => {
-            const magicPower = user.getStat("magicPower");
-            const damage = Math.floor(magicPower * 1.5);
-            target.health -= damage;
-            const modifier = new Modifier("magicPower", -1);
-            target.modifiers.push(modifier);
-            user.mana -= 4;
-
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} casts Voltage on ${targetName}, dealing ${colors.red}${damage}${colors.brightBlue} damage and reducing their strength by ${colors.red}1${colors.brightBlue}!${colors.reset}`);
-        }, false, (user) => user.mana >= 4)
+        moves.Fireball,
+        moves.Voltage
     ]),
     new Class("Dark Mage", "A sinister spellcaster who uses magic that drains the enemy and empowers themselves", [
-        new Move("Mana Drain", "Deals 0.5x the user's strength in damage and removes 3 mana from the target adding it to the user's mana", (user, target) => {
-            const strength = user.getStat("strength");
-            const damage = Math.floor(strength * 0.5);
-            target.health -= damage;
-            const manaDrained = Math.min(3, target.mana);
-            target.mana -= manaDrained;
-            user.mana += manaDrained;
-
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} casts Mana Drain on ${targetName}, dealing ${colors.red}${damage}${colors.brightBlue} damage and draining ${colors.green}${manaDrained}${colors.brightBlue} mana!${colors.reset}`);
-        }),
-        new Move("Life Siphon", "Deals 1x the user's strength in damage and heals the user for half the damage dealt, uses 4 mana", (user, target) => {
-            const strength = user.getStat("strength");
-            const damage = strength;
-            target.health -= damage;
-            const heal = Math.floor(damage / 2);
-            user.health += heal;
-            user.health = Math.min(user.health, user.getStat("health"));
-
-            const targetName = colors.yellow + target.name + colors.brightBlue;
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} casts Life Siphon on ${targetName}, dealing ${colors.red}${damage}${colors.brightBlue} damage and healing for ${colors.green}${heal}${colors.brightBlue} health!${colors.reset}`);
-        }, false, (user) => user.mana >= 4)
+        moves.LifeSiphon,
+        moves.ManaDrain
     ]),
     new Class("Pheonix Knight", "A warrior with the ability to completely rejuvenate themselves once per battle", [
-        new Move("Rejuvenate", "Fully restores the user's health, increases users strength and speed by 2 for the duration of the battle. Removes all mana", (user, target) => {
-            user.health = user.getStat("health");
-            user.mana = 0;
-            const strengthModifier = new Modifier("strength", 2);
-            const speedModifier = new Modifier("speed", 2);
-            user.modifiers.push(strengthModifier);
-            user.modifiers.push(speedModifier);
-
-            const userName = colors.yellow + user.name + colors.brightBlue;
-
-            console.log(`${userName} uses Rejuvenate, fully restoring their health, removing all mana, and increasing their strength and speed by ${colors.green}2${colors.brightBlue}!${colors.reset}`);
-        }, true, (user) => user.mana > 0)
+        moves.Rejuvenate
     ])
 
 ]
