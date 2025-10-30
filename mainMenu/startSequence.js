@@ -69,6 +69,8 @@ async function newPlayer(player) {
     console.log(colors.brightBlue + "You must slay the " + colors.yellow + "Divine" + colors.reset)
     await wait(3000);
     console.clear();
+
+    return player;
 }
 
 module.exports = startSequence;
