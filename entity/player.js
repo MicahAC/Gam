@@ -1,22 +1,57 @@
 const { defaultMoves } = require("../globals");
+const { Move } = require("../move");
 const { colors, wait } = require("../utils");
 const Entity = require("./index");
+const Item = require("./item");
+
+class Equipment {
+    constructor() {
+        /**
+         * @type {Item|null}
+         */
+        this.weapon = null;
+
+        /**
+         * @type {Item|null}
+         */
+        this.head = null;
+        
+        /**
+         * @type {Item|null}
+         */
+        this.body = null;
+        
+        /**
+         * @type {Item|null}
+         */
+        this.legs = null;
+        
+        /**
+         * @type {Item|null}
+         */
+        this.feet = null;
+    }
+}
 
 class Player extends Entity {
     constructor(name) {
         super(name, 1)
-        
+
         this.exp = 0;
         this.statPoints = 4;
+        /**
+         * @type {Item[]}
+         */
         this.inventory = [];
-        this.equipment = {
-            weapon: null,
-            head: null,
-            body: null,
-            legs: null,
-            feet: null
-        };
 
+        /**
+         * @type {Equipment}
+         */
+        this.equipment = new Equipment();
+
+        /**
+         * @type {Move[]}
+         */
         this.moves = defaultMoves;
     }
 
@@ -27,8 +62,8 @@ class Player extends Entity {
                 bonus += item.modifiers[stat];
             }
         }
-        for(const modifier of this.modifiers) {
-            if(modifier.stat === stat) {
+        for (const modifier of this.modifiers) {
+            if (modifier.stat === stat) {
                 bonus += modifier.value;
             }
         }
@@ -36,12 +71,12 @@ class Player extends Entity {
     }
 
     getStat(stat) {
-        if(this.stats[stat] + this.getBonus(stat) < 0) return 0;
+        if (this.stats[stat] + this.getBonus(stat) < 0) return 0;
         return this.stats[stat] + this.getBonus(stat);
     }
 
     getLevelUpExp() {
-        return Math.round(14 + 0.45*(this.level**1.4));
+        return Math.round(14 + 0.45 * (this.level ** 1.4));
     }
 
     async addExp(amount) {
@@ -62,5 +97,5 @@ class Player extends Entity {
  * @type {Player}
  */
 let player;
-    
-module.exports = {Player, player};
+
+module.exports = { Player, player };
