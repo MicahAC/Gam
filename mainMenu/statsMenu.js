@@ -26,9 +26,10 @@ module.exports = async function showStats() {
     else {
     statsMenu = new Menu(`${colors.brightBlue}-=Stats=-${colors.reset}\n${stats}\n\n${colors.brightBlue}Your moves:\n${moves}\n\nYou have ${p.statPoints} stat point${p.statPoints === 1 ? '' : 's'} to allocate`, 
         [
-            ...Object.keys(p.stats).map(statKey => new Option(`Increase ${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`, () => {
+            ...Object.keys(p.stats).map((statKey) => new Option(`Increase ${statKey.charAt(0).toUpperCase() + statKey.slice(1)}`, async () => {
                 p.stats[statKey] += statTypes[statKey].upgrade;
                 p.statPoints -= 1;
+                await showStats();
             })),
             new Option("Back", ()=>{})
         ]);
