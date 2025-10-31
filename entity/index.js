@@ -1,4 +1,4 @@
-const {statTypes} = require("../globals");
+const { statTypes } = require("../globals");
 const Modifier = require("./modifier");
 
 class Entity {
@@ -6,9 +6,13 @@ class Entity {
         this.name = name;
         this.level = level;
 
+        /**
+         * @type {Record<keyof typeof statTypes, number>}
+         */
         this.stats = Object.fromEntries(
             Object.entries(statTypes).map(([key, value]) => [key, value.default])
         );
+
 
         /**
          * @type {number}
@@ -32,7 +36,7 @@ class Entity {
                 totalModifier += modifier.value;
             }
         }
-        if(this.stats[stat] + totalModifier < 0) return 0;
+        if (this.stats[stat] + totalModifier < 0) return 0;
         return this.stats[stat] + totalModifier;
     }
 }
